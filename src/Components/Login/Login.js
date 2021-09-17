@@ -4,10 +4,8 @@ import { Container } from "react-bootstrap";
 import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import Dashboard from "../Dashboard/Dash_Home";
 import { Alert } from "react-bootstrap";
-import { Route, Redirect, useHistory } from "react-router-dom";
-import ProtectedRoute from "../Authencation/ProtectedRoute";
+import { Route,useHistory } from "react-router-dom";
 import LoaderComp from "../Loader/LoaderComp";
 
 const useStyles = makeStyles((theme) => ({

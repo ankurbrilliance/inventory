@@ -1,36 +1,23 @@
 import React, { useState, useEffect } from "react";
-import RightDiv from "./RightDiv";
 import "./CreateOrder";
 import "./CreateOrder.css";
-import {
-  Modal,
-  Button,
-  Container,
-  Col,
-  Row,
-  Badge,
-  Form,
-  Alert,
-} from "react-bootstrap";
+import { Container, Col, Row, Badge, Form, Alert } from "react-bootstrap";
 import Axios from "axios";
+import LoaderComp from "../Loader/LoaderComp";
+
 const CreateOrder = () => {
   const [date, setDate] = useState("");
   const [checked, setChecked] = useState("");
-  const [check, setCheck] = useState(false);
   const [company, setCompany] = useState("");
   const [guard, setGuard] = useState("");
   const [color, setColor] = useState("");
   const [temper, setTemper] = useState("");
   const [grade, setGrade] = useState("");
-  const [show, setShow] = useState(false);
-  const [show2, setShow2] = useState(false);
-  const [show1, setShow1] = useState(false);
+
   const [rate, setRate] = useState("");
   const [gst, setGst] = useState("");
   const [coating, setCoating] = useState(0);
-  const handleClose = () => setShow(false);
-  const handleClose1 = () => setShow1(false);
-  const handleClose2 = () => setShow2(false);
+
   const [newProduct, setNewProduct] = useState([]);
   const [checkedValue, setCheckedValue] = useState("");
   const [failureAlert, setFailureAlert] = useState(false);
@@ -94,18 +81,19 @@ const CreateOrder = () => {
     topcolor: color,
     selectProduct: checked,
     grade: grade,
-    coatingnum: coating,
+    coatingnum: parseInt(coating),
     temper: temper,
     guardfilm: guard,
-    thickness: desc.thickness,
-    width: desc.width,
-    length: desc.length,
-    pcs: desc.pcs,
-    weight: desc.weight,
-    gst: gst,
-    rate: rate,
+    thickness: parseInt(desc.thickness),
+    width: parseInt(desc.width),
+    length: parseInt(desc.length),
+    pcs: parseInt(desc.pcs),
+    weight: parseInt(desc.weight),
+    gst: parseInt(gst),
+    rate: parseInt(rate),
     productId: productKey,
   };
+  const [loading, setLoading] = useState(false);
 
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, "0");
@@ -138,14 +126,14 @@ const CreateOrder = () => {
     address: inputs.address,
     orderId: inputs.orderId,
     city: inputs.city,
-    phone_no: inputs.phone_no,
+    phone_no: parseInt(inputs.phone_no),
     deliveryDate: inputs.deliveryDate,
     products: newProduct,
   };
 
   const hadnleFormSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
       const token =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
@@ -157,8 +145,9 @@ const CreateOrder = () => {
           "Access-Control-Allow-Origin": "*",
         },
       }).then((response) => {
-        console.log(response);
-        if (response.status === 201) {
+        setLoading(false);
+        if (response.status === 200) {
+          console.log(response);
           e.target.reset();
           setSuccessAlert(true);
           setTimeout(() => {
@@ -172,6 +161,7 @@ const CreateOrder = () => {
         }
       });
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -255,6 +245,7 @@ const CreateOrder = () => {
                         value={inputs.clientName}
                         type="text"
                         name="clientName"
+                        required
                       />
                     </Col>
                   </Row>
@@ -294,7 +285,7 @@ const CreateOrder = () => {
                         className="input_order"
                         onChange={handleChange}
                         value={inputs.phone_no}
-                        type="text"
+                        type="Number"
                         name="phone_no"
                         required
                       />
@@ -323,7 +314,7 @@ const CreateOrder = () => {
                         className="input_order"
                         onChange={handleChange}
                         value={inputs.deliveryDate}
-                        type="text"
+                        type="date"
                         name="deliveryDate"
                         required
                       />
@@ -604,7 +595,7 @@ const CreateOrder = () => {
                                   <input
                                     type="number"
                                     name="thickness"
-                                    placeHolder="Thickness"
+                                    placeholder="Thickness"
                                     className="custom_input"
                                     onChange={handleDesc}
                                     value={desc.thickness}
@@ -618,7 +609,7 @@ const CreateOrder = () => {
                                   <input
                                     type="number"
                                     name="length"
-                                    placeHolder="Length"
+                                    placeholder="Length"
                                     className="custom_input"
                                     onChange={handleDesc}
                                     value={desc.length}
@@ -631,7 +622,7 @@ const CreateOrder = () => {
                                   <label for="thickness">Width</label>
                                   <input
                                     type="number"
-                                    placeHolder="Width"
+                                    placeholder="Width"
                                     className="custom_input"
                                     name="width"
                                     onChange={handleDesc}
@@ -733,7 +724,16 @@ const CreateOrder = () => {
                       }}
                       type="submit"
                     >
-                      Submit
+                      {loading ? (
+                        <LoaderComp
+                          type={"TailSpin"}
+                          color={"white"}
+                          hidden={true}
+                          height={30}
+                        />
+                      ) : (
+                        "Submit"
+                      )}
                     </button>
                   </div>
                 </form>

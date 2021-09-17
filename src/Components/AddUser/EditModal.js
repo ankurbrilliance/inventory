@@ -238,7 +238,7 @@ const EditModal = ({ show, setShow, id }) => {
 
                 <Col>
                   <input
-                    type="text"
+                    type="date"
                     name="joined_date"
                     className="modal_input"
                     placeholder="Joined Date"

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Col, Row, Modal } from "react-bootstrap";
+import { Container, Col, Row} from "react-bootstrap";
 import Axios from "axios";
 import LoaderComp from "../Loader/LoaderComp";
 import EditModal from "./EditModal";

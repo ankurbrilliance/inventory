@@ -234,7 +234,7 @@ const AddUser = () => {
 
                 <Col>
                   <input
-                    type="text"
+                    type="date"
                     name="joined_date"
                     className="modal_input"
                     placeholder="Joined Date"
@@ -327,14 +327,12 @@ const AddUser = () => {
       </Modal>
       <Container className="my-4">
         <Row>
-          <Col>
+          <div className="d-flex">
             <h4>Users</h4>
-          </Col>
-          <Col className="me-auto">
-            <button className="add_btn " onClick={handleShow}>
+            <button className="add_btn ms-auto" onClick={handleShow}>
               <i class="fas fa-plus me-2"></i>AddUser
             </button>
-          </Col>
+          </div>
         </Row>
         <Row>
           <UserProfile />

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "./Purchase.css";
 import { Container, Col, Row, Alert, Badge } from "react-bootstrap";
 import Axios from "axios";
-import { ConsoleWriter } from "istanbul-lib-report";
 import LoaderComp from "../Loader/LoaderComp";
 
 const Purchase_Order = () => {
@@ -481,7 +480,7 @@ const Purchase_Order = () => {
                           <input
                             className="input_fields"
                             placeholder="Deliver Date"
-                            type="text"
+                            type="date"
                             required
                             name="deliveryDate"
                             onChange={handleInput}
