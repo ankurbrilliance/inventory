@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useHistory, Redirect, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import "./dashboard.css";
 const Sidenav = ({ match }) => {
   const { path } = useRouteMatch();
@@ -40,6 +40,9 @@ const Sidenav = ({ match }) => {
         </Link>
         <Link className="nav_link" to={`${match}/purchase`}>
           <i class="fas fa-cart-arrow-down"></i>
+        </Link>
+        <Link className="nav_link" to={`${match}/billing`}>
+          <i class="fas fa-file-invoice"></i>
         </Link>
         <Link className="nav_link">
           <button

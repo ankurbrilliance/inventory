@@ -9,35 +9,36 @@ const ViewMoreList = () => {
   const [product, setProduct] = useState([]);
 
   const { id } = useParams();
-  console.log(id);
 
-  console.log(id);
   useEffect(() => {
-    setTimeout(() => {
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
-      Axios.get(`http://65.0.129.68/api/v1/sales/get/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }).then((response) => {
-        console.log(response.data.res);
-        if (response.status === 200) {
-          const alldata = response?.data?.res;
-          setOrder(() => {
-            setOrder(alldata);
-          });
-          setProduct(() => {
-            setProduct(response?.data?.res?.products);
-          });
-          console.log(order);
-          console.log(product);
-        }
-      });
-    }, 2000);
-  }, [id]);
+    const fetchData = async () => {
+      setTimeout(async () => {
+        const token =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
+        await Axios.get(`http://65.0.129.68/api/v1/sales/get/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }).then((response) => {
+          console.log(response.data.res);
+          if (response.status === 200) {
+            const alldata = response?.data?.res;
+            setOrder(() => {
+              setOrder(alldata);
+            });
+            setProduct(() => {
+              setProduct(response?.data?.res?.products);
+            });
+            console.log(order);
+            console.log(product);
+          }
+        });
+      }, 2000);
+    };
+    fetchData();
+  }, [id, order, product]);
   return (
     <>
       <Container

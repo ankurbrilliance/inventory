@@ -95,7 +95,8 @@
   background-color: #cddde8;
   border-radius: 30px;
   outline-style: none;
-  height: auto;
+  height: 250px;
+  overflow-y: auto;
 }
 .table th {
   font-size: 15px;

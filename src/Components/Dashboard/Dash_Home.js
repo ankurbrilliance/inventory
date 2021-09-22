@@ -13,6 +13,8 @@ import Purchase from "../Purchase/Purchase";
 import PurchaseOrder from "../Purchase/Purchase_Order";
 import ViewMoreList from "../ListOrder/ViewMoreList";
 import PurchaseView from "../Purchase/PurchaseView";
+import BillingList from "../Billing/BillingList";
+import BillingMore from "../Billing/BillingMore";
 
 const Dash_Home = ({ match, location, history }) => {
   console.log(match);
@@ -29,6 +31,8 @@ const Dash_Home = ({ match, location, history }) => {
           <Link to={`${match.path}/purchase/:id`}></Link>
           <Link to={`${match.path}/purchase_order`}></Link>
           <Link to={`${match.path}/listOrder/:id`}></Link>
+          <Link to={`${match.path}/billing/:id`}></Link>
+          <Link to={`${match.path}/billing`}></Link>
           <Switch>
             <Route exact path={`${match.path}`}>
               <Home match={match.path} />
@@ -71,6 +75,16 @@ const Dash_Home = ({ match, location, history }) => {
             <Route exact path={`${match.path}/purchase/:id`}>
               <div className="purchase">
                 <PurchaseView match={match.path} />
+              </div>
+            </Route>
+            <Route exact path={`${match.path}/billing`}>
+              <div className="purchase">
+                <BillingList match={match.path} />
+              </div>
+            </Route>
+            <Route exact path={`${match.path}/billing/:id`}>
+              <div className="purchase">
+                <BillingMore match={match.path} />
               </div>
             </Route>
           </Switch>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import Calender from "./Calender";
 import Reminder from "./Reminder";
 
@@ -8,7 +8,6 @@ const Last = () => {
 
   const mm = todays.toLocaleString("default", { month: "long" });
   const dd = todays.getDate();
-  const yy = todays.getFullYear();
   const dayName = todays.toLocaleString("default", { weekday: "long" });
 
   return (

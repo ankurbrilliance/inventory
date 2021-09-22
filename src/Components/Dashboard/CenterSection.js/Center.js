@@ -5,30 +5,64 @@ import Cards from "./Cards";
 import ApexChart from "./BarGraph.js/ApexChart";
 import { Link } from "react-router-dom";
 import Axios from "axios";
-
+import LoaderComp from "../../Loader/LoaderComp";
 const Center = ({ match }) => {
   console.log(match);
   const [item, setItem] = useState({});
   const [sales, setSales] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [order, setOrder] = useState([]);
 
-  useEffect(async () => {
-    try {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
+        await Axios.get("http://65.0.129.68/api/v1/total/getadmin", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }).then((response) => {
+          setItem(response.data);
+          setSales(response.data.totalsales);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+  useEffect(() => {
+    const fetchData = async () => {
       const token =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
-      await Axios.get("http://65.0.129.68/api/v1/total/getadmin", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      }).then((response) => {
-        setItem(response.data);
-        setSales(response.data.totalsales);
+      await Axios.get(
+        "http://65.0.129.68/api/v1/BillingManagement/RecentWeeklyOrder",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      ).then((response) => {
+        setLoading(true);
+        setTimeout(() => {
+          if (response.status === 201) {
+            const recentOrder = response.data.output;
+            setOrder(recentOrder);
+            setLoading(false);
+            console.log(order);
+          } else {
+            setLoading(true);
+          }
+        }, 1000);
       });
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+    };
+    fetchData();
+  }, [order]);
 
   let totalsales;
   totalsales = sales.map((val, ind) => {
@@ -78,11 +112,13 @@ const Center = ({ match }) => {
         </Container>
         <Container>
           <Row>
-            <div className=".fixTableHead">
+            <div className="fixTableHead">
               <Table
                 size="sm"
                 className="table"
-                style={{ justifyContent: "center" }}
+                style={{
+                  justifyContent: "center",
+                }}
               >
                 <div
                   style={{
@@ -102,42 +138,48 @@ const Center = ({ match }) => {
                 <tbody>
                   <tr>
                     <td>
-                      <b>S No.</b>
+                      <b>#</b>
                     </td>
                     <td>
-                      <b>client</b>
+                      <b>Client</b>
                     </td>
                     <td>
-                      <b>order Id</b>
+                      <b>Order Id</b>
                     </td>
                     <td>
-                      <b>date</b>
+                      <b>Date</b>
                     </td>
                     <td>
-                      <b>status</b>
+                      <b>City</b>
                     </td>
                   </tr>
-                  <tr style={{ padding: "10px" }}>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Otto12423</td>
-                    <td>465415616</td>
-                    <td>pending</td>
-                  </tr>
-                  <tr style={{ padding: "10px" }}>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Otto12423</td>
-                    <td>465415616</td>
-                    <td>pending</td>
-                  </tr>
-                  <tr>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Otto12423</td>
-                    <td>465415616</td>
-                    <td>pending</td>
-                  </tr>
+
+                  {order.length !== 0 ? (
+                    order.map((val, ind) => (
+                      <tr key={val._id} style={{ padding: "10px" }}>
+                        <td>{ind + 1}</td>
+                        <td>{val.clientName}</td>
+                        <td>{val.orderId}</td>
+                        <td>{val.deliveryDate}</td>
+                        <td>{val.city}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <Container
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        display: "flex",
+                      }}
+                    >
+                      <LoaderComp
+                        type={"TailSpin"}
+                        height={40}
+                        hidden={false}
+                        color={"#0e2434"}
+                      />
+                    </Container>
+                  )}
                 </tbody>
               </Table>
             </div>

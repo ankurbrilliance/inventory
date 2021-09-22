@@ -5,7 +5,7 @@ import axios from "axios";
 import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import { Alert } from "react-bootstrap";
-import { Route,useHistory } from "react-router-dom";
+import { Route, useHistory } from "react-router-dom";
 import LoaderComp from "../Loader/LoaderComp";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Login = (props) => {
-  const [isAuth, setIsAuth] = useState(false);
+  const [setIsAuth] = useState(false);
   const [error, setError] = useState(false);
   const [Loading, setLoading] = useState(false);
   const [info, setInfo] = useState({

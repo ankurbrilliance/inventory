@@ -4,44 +4,52 @@ import { Container, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Axios from "axios";
 import LoaderComp from "../Loader/LoaderComp";
-import ReactPaginate from "react-paginate";
+import BillingPagination from "../Billing/BillingPagination";
 
 const Purchase = ({ match }) => {
   const [item, setItem] = useState([]);
-  const [postsPerPage] = useState(10);
-  const [offset, setOffset] = useState(1);
-  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(6);
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = item.slice(indexOfFirstPost, indexOfLastPost);
 
-  const handlePageClick = (event) => {
-    const selectedPage = event.selected;
-    setOffset(selectedPage + 1);
-  };
+  //chnagePage
+
+  const paginate = (pageNumbers) => setCurrentPage(pageNumbers);
+
   const getAllPosts = async () => {
     setTimeout(async () => {
       await Axios.get("http://65.0.129.68/api/v1/purchaseStock/get").then(
         (response) => {
+          console.log(response);
           const data = response.data.res;
-          const slice = data.slice(offset - 1, offset - 1 + postsPerPage);
-          const postData = getPostData(slice);
-
-          setItem(postData);
-          setPageCount(Math.ceil(data.length / postsPerPage));
+          setItem(data);
         }
       );
     }, 1000);
   };
   useEffect(() => {
     getAllPosts();
-  }, [offset]);
+  });
 
-  const getPostData = (data) => {
-    return (
-      <>
-        {data.length > 0 ? (
+  return (
+    <>
+      <Container className="outer_container">
+        <Container className="heading_container mt-4 d-flex">
+          <h4 className="purchase_heading">Purchase Stocks</h4>
+
+          <Link className="ms-auto" to={`${match}/purchase_order`}>
+            <button className="purchase_button">
+              <i className="fas fa-plus m-1"></i>Purchase
+            </button>
+          </Link>
+        </Container>
+        {currentPosts.length !== 0 ? (
           <Container className="list_container mt-4">
             <>
               <Row>
-                {data.map((val, ind) => (
+                {currentPosts.map((val, ind) => (
                   <Col
                     className="col-lg-6 col-md-8 col-sm-12 col-xl-6 mb-4"
                     key={ind}
@@ -49,7 +57,7 @@ const Purchase = ({ match }) => {
                     <Container
                       className="detail_container py-3 pl-0"
                       style={
-                        Math.abs(ind % 2) == 1
+                        Math.abs(ind % 2) === 1
                           ? { backgroundColor: "#cddde8" }
                           : { backgroundColor: "lightgrey" }
                       }
@@ -124,6 +132,22 @@ const Purchase = ({ match }) => {
                   </Col>
                 ))}
               </Row>
+              <Row>
+                <Container
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    display: "grid",
+                    marginBottom: "100px",
+                  }}
+                >
+                  <BillingPagination
+                    postsPerPage={postsPerPage}
+                    totalPosts={item.length}
+                    paginate={paginate}
+                  />
+                </Container>
+              </Row>
             </>
           </Container>
         ) : (
@@ -140,38 +164,7 @@ const Purchase = ({ match }) => {
             </Container>
           </>
         )}
-      </>
-    );
-  };
-
-  return (
-    <>
-      <Container className="outer_container">
-        <Container className="heading_container mt-4 d-flex">
-          <h4 className="purchase_heading">Purchase Stocks</h4>
-
-          <Link className="ms-auto" to={`${match}/purchase_order`}>
-            <button className="purchase_button">
-              <i className="fas fa-plus m-1"></i>Purchase
-            </button>
-          </Link>
-        </Container>
-        {item}
-
         {/* Using React Paginate */}
-      </Container>
-      <Container style={{ marginBottom: "200px" }}>
-        <ReactPaginate
-          previousLabel={"previous"}
-          nextLabel={"next"}
-          breakLabel={"..."}
-          breakClassName={"break-me"}
-          pageCount={pageCount}
-          onPageChange={handlePageClick}
-          containerClassName={"pagination"}
-          subContainerClassName={"pages pagination"}
-          activeClassName={"active"}
-        />
       </Container>
     </>
   );

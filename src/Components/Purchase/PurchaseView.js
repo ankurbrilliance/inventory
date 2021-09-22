@@ -7,37 +7,39 @@ import LoaderComp from "../Loader/LoaderComp";
 const PurchaseView = () => {
   const [purchase, setPurchase] = useState({});
   const [pro, setPro] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams();
 
-  useEffect(async () => {
-    setTimeout(async () => {
-      try {
-        const token =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
-        await Axios.get(`http://65.0.129.68/api/v1/purchaseStock/by/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-        }).then((response) => {
-          console.log(response);
-          if (response.status === 200) {
-            const items = response?.data.res;
-            const products = response?.data.res.products;
-            setPurchase((input) => {
-              setPurchase(items);
-            });
-            setPro((input) => {
-              setPro(products);
-            });
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
-    }, 1000);
+  useEffect(() => {
+    const fetchData = async () => {
+      setTimeout(async () => {
+        try {
+          const token =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
+          await Axios.get(`http://65.0.129.68/api/v1/purchaseStock/by/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+          }).then((response) => {
+            console.log(response);
+            if (response.status === 200) {
+              const items = response?.data.res;
+              const products = response?.data.res.products;
+              setPurchase((input) => {
+                setPurchase(items);
+              });
+              setPro((input) => {
+                setPro(products);
+              });
+            }
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      }, 1000);
+    };
+    fetchData();
   }, [id]);
 
   return (
@@ -50,8 +52,13 @@ const PurchaseView = () => {
             </Col>
             <Col>-</Col>
             <Col className="_cont">
-              <h5>{purchase?.purchaseId}</h5>
+              <h5>{purchase?.purchaseNumber}</h5>
             </Col>
+          </Row>
+          <Row className="mt-1">
+            <Col className="_head">Vendor Name</Col>
+            <Col>-</Col>
+            <Col className="_cont">{purchase?.vendor}</Col>
           </Row>
           <Row className="mt-1">
             <Col className="_head">Firm Name</Col>

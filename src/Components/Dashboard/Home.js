@@ -1,7 +1,7 @@
 import React from "react";
 import Center from "./CenterSection.js/Center";
 import { Container, Row, Col } from "react-bootstrap";
-import Last from "./LastSection/Last";
+
 import "./dashboard.css";
 import Calender from "./LastSection/Calender";
 import Reminder from "./LastSection/Reminder";

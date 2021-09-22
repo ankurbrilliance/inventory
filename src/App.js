@@ -14,20 +14,20 @@ import AddUser from "./Components/AddUser/AddUser";
 import PurchaseOrder from "./Components/Purchase/Purchase_Order";
 
 function App(props) {
-  console.log(props);
+  console.log(window.location.pathname);
   const authGuard = (Component) => () => {
     return localStorage.getItem("token") ? (
       <Component />
     ) : (
-      <Redirect exact to="/login" />
+      <Redirect exact to={`/login `} />
     );
   };
   const token = localStorage.getItem("token");
   return (
     <>
       <Router {...props}>
-        <Link to="/login" />
-        <Route exact path="/login" component={!token ? Login : Dashboard} />
+        <Link to={`/login`} />
+        <Route exact path={`/login`} component={!token ? Login : Dashboard} />
 
         <Route path="/web-front" render={authGuard(Dashboard)} />
         <Route

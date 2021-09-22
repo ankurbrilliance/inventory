@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Col, Row} from "react-bootstrap";
+import { Container, Col, Row } from "react-bootstrap";
 import Axios from "axios";
 import LoaderComp from "../Loader/LoaderComp";
 import EditModal from "./EditModal";
@@ -11,24 +11,27 @@ const UserProfile = () => {
   const [show, setShow] = useState(false);
   const [editId, setEditId] = useState("");
 
-  useEffect(async () => {
+  useEffect(() => {
     setLoading(true);
-    setTimeout(async () => {
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
-      await Axios.get("http://65.0.129.68/api/v1/user_management", {
-        headers: { Authorization: `Bearer ${token}` },
-      }).then((res) => {
-        if (!res) {
-          setError(true);
-        } else {
-          const result = res.data.output.results;
-          console.log(result);
-          setUser(result);
-          setLoading(false);
-        }
-      });
-    }, 2500);
+    const fetchData = async () => {
+      setTimeout(async () => {
+        const token =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
+        await Axios.get("http://65.0.129.68/api/v1/user_management", {
+          headers: { Authorization: `Bearer ${token}` },
+        }).then((res) => {
+          if (!res) {
+            setError(true);
+          } else {
+            const result = res.data.output.results;
+            console.log(result);
+            setUser(result);
+            setLoading(false);
+          }
+        });
+      }, 2500);
+    };
+    fetchData();
   }, [user]);
 
   const handleConfirm = (val, e) => {
@@ -48,6 +51,7 @@ const UserProfile = () => {
 
   const handleDelete = async (val, e) => {
     e.preventDefault();
+
     const token =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
     await Axios.delete(

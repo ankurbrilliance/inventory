@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Purchase.css";
 import { Container, Col, Row, Alert, Badge } from "react-bootstrap";
 import Axios from "axios";
@@ -16,6 +16,9 @@ const Purchase_Order = () => {
   const [failureAlert, setFailureAlert] = useState(false);
   const [successAlert, setSuccessAlert] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [rate, setRate] = useState(0);
+  const [gst, setGst] = useState(0);
+  const [total, setTotal] = useState("");
   // const [, setOrders] = useState([newProducts]);
 
   const [inputs, setInputs] = useState({
@@ -23,7 +26,7 @@ const Purchase_Order = () => {
     firmName: "",
     clientName: "",
     email: "",
-    phone_no: 0,
+    phone_no: "",
     address: "",
     city: "",
     note: "",
@@ -36,13 +39,23 @@ const Purchase_Order = () => {
     width: 0,
     length: 0,
     weight: 0,
-    gst: 0,
-    rate: 0,
     pcs: 0,
   });
-  const finalProducts = inputs.products;
+
+  const sum = parseInt(rate) * Number(18 / 100);
+  const final = parseInt(sum) + parseInt(rate);
+
+  useEffect(() => {
+    setTotal(() => {
+      setTotal(final);
+    });
+    setGst(() => {
+      setGst(gst);
+    });
+  }, [rate, final, gst]);
+
   const product = {
-    selectProduct: selectProduct,
+    select_product: selectProduct,
     company: company,
     topcolor: color,
     grade: grade,
@@ -54,9 +67,10 @@ const Purchase_Order = () => {
     length: parseInt(num.length),
     pcs: parseInt(num.pcs),
     weight: parseInt(num.weight),
-    gst: parseInt(num.gst),
-    rate: parseInt(num.rate),
+    gst: parseInt(total),
+    rate: parseInt(rate),
   };
+
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, "0");
   const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
@@ -69,7 +83,7 @@ const Purchase_Order = () => {
     firmName: inputs.firmName,
     clientName: inputs.clientName,
     email: inputs.email,
-    phone_no: inputs.phone_no,
+    phone_no: parseInt(inputs.phone_no),
     address: inputs.address,
     city: inputs.city,
     note: inputs.notes,
@@ -95,8 +109,6 @@ const Purchase_Order = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
     await Axios.post("http://65.0.129.68/api/v1/purchaseStock/create", formData)
       .then((response) => {
         if (response.status === 200) {
@@ -139,7 +151,7 @@ const Purchase_Order = () => {
               <div className="d-flex">
                 <h4>
                   <Badge style={{ backgroundColor: "#2D3E4D" }} bg="secondary">
-                    {val.selectProduct}
+                    {val.select_product}
                   </Badge>
                 </h4>
 
@@ -523,15 +535,24 @@ const Purchase_Order = () => {
                           -
                         </Col>
                         <Col className="col-lg-7 col-xs-7 col-md-7 col-sm-7 col-xl-7">
-                          <input
-                            className="input_fields"
-                            placeholder="Rate"
-                            type="number"
-                            name="rate"
-                            value={num.rate}
-                            onChange={handleNum}
-                            required
-                          />
+                          <div
+                            className="d-flex input_fields"
+                            style={{ width: "60%" }}
+                          >
+                            <input
+                              style={{ border: "none", outlineStyle: "none" }}
+                              placeholder="Rate"
+                              type="number"
+                              name="rate"
+                              min="0"
+                              value={rate || ""}
+                              onChange={(e) => {
+                                setRate(e.target.value);
+                              }}
+                              required
+                            />
+                            <i class="fas fa-rupee-sign"></i>
+                          </div>
                         </Col>
                       </Row>
                       <Row className="col-lg-12 col-md-12 col-sm-12 col-xl-12 mb-2">
@@ -542,15 +563,20 @@ const Purchase_Order = () => {
                           -
                         </Col>
                         <Col className="col-lg-7 col-xs-7 col-md-7 col-sm-7 col-xl-7">
-                          <input
-                            className="input_fields"
-                            placeholder="GST"
-                            type="number"
-                            name="gst"
-                            value={num.gst}
-                            onChange={handleNum}
-                            required
-                          />
+                          <div
+                            className="d-flex input_fields"
+                            style={{ width: "60%" }}
+                          >
+                            <input
+                              style={{ border: "none", outlineStyle: "none" }}
+                              placeholder="GST"
+                              type="text"
+                              value={total || ""}
+                              required
+                              readOnly
+                            />
+                            <i class="fas fa-rupee-sign"></i>
+                          </div>
                         </Col>
                       </Row>
                       <Row className="col-lg-12 col-md-12 col-sm-12 col-xl-12 mb-2">
@@ -753,7 +779,7 @@ const Purchase_Order = () => {
                             type="number"
                             min="0"
                             name="thickness"
-                            value={num.thickness}
+                            value={num.thickness || ""}
                             onChange={handleNum}
                             required
                           />
@@ -773,7 +799,7 @@ const Purchase_Order = () => {
                             type="number"
                             name="width"
                             min="0"
-                            value={num.width}
+                            value={num.width || ""}
                             onChange={handleNum}
                             required
                           />
@@ -793,7 +819,7 @@ const Purchase_Order = () => {
                             type="number"
                             name="length"
                             min="0"
-                            value={num.length}
+                            value={num.length || ""}
                             onChange={handleNum}
                             required
                           />
@@ -813,7 +839,7 @@ const Purchase_Order = () => {
                             type="number"
                             min="0"
                             name="weight"
-                            value={num.weight}
+                            value={num.weight || ""}
                             onChange={handleNum}
                             required
                           />
@@ -834,7 +860,7 @@ const Purchase_Order = () => {
                             min="0"
                             required
                             name="pcs"
-                            value={num.pcs}
+                            value={num.pcs || ""}
                             onChange={handleNum}
                           />
                         </Col>

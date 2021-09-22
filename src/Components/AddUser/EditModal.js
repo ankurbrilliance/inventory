@@ -69,20 +69,23 @@ const EditModal = ({ show, setShow, id }) => {
     }
   };
 
-  useEffect(async () => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
-    await Axios.get(`http://65.0.129.68/api/v1/user_management/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    }).then((response) => {
-      const userValue = response?.data?.res;
-      console.log(userValue);
-      setPrev(userValue);
-    });
+  useEffect(() => {
+    const fetchData = async () => {
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
+      await Axios.get(`http://65.0.129.68/api/v1/user_management/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }).then((response) => {
+        const userValue = response?.data?.res;
+        console.log(userValue);
+        setPrev(userValue);
+      });
+    };
+    fetchData();
   }, [id]);
 
   return (

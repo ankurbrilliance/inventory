@@ -4,9 +4,19 @@ import { Link } from "react-router-dom";
 import "./ListOrder.css";
 import Axios from "axios";
 import LoaderComp from "../Loader/LoaderComp";
+import BillingPagination from "../Billing/BillingPagination";
 
 const ListOrder = ({ match }) => {
   const [item, setItem] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage] = useState(6);
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = item.slice(indexOfFirstPost, indexOfLastPost);
+
+  //chnagePag
+
+  const paginate = (pageNumbers) => setCurrentPage(pageNumbers);
 
   useEffect(
     (e) => {
@@ -28,73 +38,103 @@ const ListOrder = ({ match }) => {
 
   return (
     <>
-      {item.length !== 0 ? (
+      {currentPosts.length !== 0 ? (
         <Container>
           <>
             <Row style={{ marginTop: "20px" }}>
               <h4 style={{ color: "#7d8488" }}>Orders</h4>
             </Row>
             <Row>
-              {item.map((val, index) =>
-                val.products.map((v, ind) => (
-                  <>
-                    <Col>
-                      <Container
-                        className=" my-2 orderDiv col-xs-8 col-sm-8 col-md-6 col-lg-6 col-xl-6 p-3"
-                        style={
-                          Math.abs(ind % 2) == 1
-                            ? { backgroundColor: "#cddde8" }
-                            : { backgroundColor: "lightgrey" }
-                        }
-                      >
-                        <Row>
-                          <Col>
-                            <Row style={{ fontSize: "15px" }}>
-                              <Col className="col-lg-4 col-sm-4">
-                                <h4 className="main_heading">OrderId</h4>
-                              </Col>
-                              <Col className="col-lg-1 col-sm-1">-</Col>
-                              <Col className="col-lg-6 col-sm-6 main_content">
-                                {val.orderId}
-                              </Col>
-                            </Row>
-                          </Col>
-                          <Col>
-                            <Col
-                              className="d-flex me-auto"
-                              style={{ fontSize: "15px", align: "right" }}
-                            >
-                              <div className="ms-auto d-flex">
-                                <p className="heading mr-1">
-                                  <b>Deliver Date</b>
-                                </p>
-                                <p>-</p>
-                                <p>{val.deliveryDate}</p>
-                              </div>
+              {currentPosts.map((val, index) => (
+                <>
+                  <Col>
+                    <Container
+                      className=" my-2 orderDiv col-xs-8 col-sm-8 col-md-6 col-lg-6 col-xl-6 p-3"
+                      style={
+                        Math.abs(index % 2) === 1
+                          ? { backgroundColor: "#cddde8" }
+                          : { backgroundColor: "lightgrey" }
+                      }
+                    >
+                      <Row>
+                        <Col>
+                          <Row style={{ fontSize: "15px" }}>
+                            <Col className="col-lg-4 col-sm-4">
+                              <h4 className="main_heading">OrderId</h4>
                             </Col>
+                            <Col className="col-lg-1 col-sm-1">-</Col>
+                            <Col className="col-lg-6 col-sm-6 main_content">
+                              {val.orderId}
+                            </Col>
+                          </Row>
+                        </Col>
+                        <Col>
+                          <Col
+                            className="d-flex me-auto"
+                            style={{ fontSize: "15px", align: "right" }}
+                          >
+                            <div className="ms-auto d-flex">
+                              <p className="heading mr-1">
+                                <b>Deliver Date</b>
+                              </p>
+                              <p>-</p>
+                              <p>{val.deliveryDate}</p>
+                            </div>
                           </Col>
-                        </Row>
-                        <Row className="pt-1">
-                          <Col className="col-lg-4 col-sm-4">
-                            <h6 className="heading">
-                              Client Name <i class="fas fa-user-tie"></i>
-                            </h6>
-                          </Col>
-                          <Col className="col-lg-1 col-sm-1">-</Col>
-                          <Col className="col-lg-6 col-sm-6 content">
-                            {val.clientName}
-                          </Col>
-                        </Row>
-                        <Row className="pt-1">
-                          <Col className="col-lg-4 col-sm-4">
-                            <h6 className="heading">Address</h6>
-                          </Col>
-                          <Col className="col-lg-1 col-sm-1">-</Col>
-                          <Col className="col-lg-6 col-sm-6 content">
-                            {val.address}
-                          </Col>
-                        </Row>
-                        <Row className="pt-1">
+                        </Col>
+                      </Row>
+                      <Row className="pt-1">
+                        <Col className="col-lg-4 col-sm-4">
+                          <h6 className="heading">
+                            Client Name <i class="fas fa-user-tie"></i>
+                          </h6>
+                        </Col>
+                        <Col className="col-lg-1 col-sm-1">-</Col>
+                        <Col className="col-lg-6 col-sm-6 content">
+                          {val.clientName}
+                        </Col>
+                      </Row>
+                      <Row className="pt-1">
+                        <Col className="col-lg-4 col-sm-4">
+                          <h6 className="heading">
+                            Firm Name <i class="fas fa-user-tie"></i>
+                          </h6>
+                        </Col>
+                        <Col className="col-lg-1 col-sm-1">-</Col>
+                        <Col className="col-lg-6 col-sm-6 content">
+                          {val.firmName}
+                        </Col>
+                      </Row>
+                      <Row className="pt-1">
+                        <Col className="col-lg-4 col-sm-4">
+                          <h6 className="heading">
+                            OrderId <i class="fas fa-user-tie"></i>
+                          </h6>
+                        </Col>
+                        <Col className="col-lg-1 col-sm-1">-</Col>
+                        <Col className="col-lg-6 col-sm-6 content">
+                          {val.orderId}
+                        </Col>
+                      </Row>
+                      <Row className="pt-1">
+                        <Col className="col-lg-4 col-sm-4">
+                          <h6 className="heading">Address</h6>
+                        </Col>
+                        <Col className="col-lg-1 col-sm-1">-</Col>
+                        <Col className="col-lg-6 col-sm-6 content">
+                          {val.address}
+                        </Col>
+                      </Row>
+                      <Row className="pt-1">
+                        <Col className="col-lg-4 col-sm-4">
+                          <h6 className="heading">PhoneNumber</h6>
+                        </Col>
+                        <Col className="col-lg-1 col-sm-1">-</Col>
+                        <Col className="col-lg-6 col-sm-6 content">
+                          {val.phone_no}
+                        </Col>
+                      </Row>
+                      {/* <Row className="pt-1">
                           <Col className="col-lg-4 col-sm-4">
                             <h6 className="heading">ProductId</h6>
                           </Col>
@@ -121,35 +161,48 @@ const ListOrder = ({ match }) => {
                           <Col className="col-lg-6 col-sm-6 content">
                             {v.weight}
                           </Col>
-                        </Row>
-                        <Row>
-                          <button
-                            className="ms-auto"
+                        </Row> */}
+                      <Row>
+                        <button
+                          className="ms-auto"
+                          style={{
+                            width: "auto",
+                            marginRight: "10px",
+                            border: "none",
+                            backgroundColor: "transparent",
+                          }}
+                        >
+                          <Link
                             style={{
-                              width: "auto",
-                              marginRight: "10px",
-                              border: "none",
-                              backgroundColor: "transparent",
+                              textDecoration: "none",
+                              color: "#0e2434",
+                              fontSize: "14px",
                             }}
+                            to={`${match}/listOrder/${val._id}`}
                           >
-                            <Link
-                              style={{ color: "#0e2434" }}
-                              to={`${match}/listOrder/${val._id}`}
-                              style={{
-                                textDecoration: "none",
-                                color: "#0e2434",
-                                fontSize: "14px",
-                              }}
-                            >
-                              View More..
-                            </Link>
-                          </button>
-                        </Row>
-                      </Container>
-                    </Col>
-                  </>
-                ))
-              )}
+                            View More..
+                          </Link>
+                        </button>
+                      </Row>
+                    </Container>
+                  </Col>
+                </>
+              ))}
+            </Row>
+            <Row>
+              <Container
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "grid",
+                }}
+              >
+                <BillingPagination
+                  postsPerPage={postsPerPage}
+                  totalPosts={item.length}
+                  paginate={paginate}
+                />
+              </Container>
             </Row>
           </>
         </Container>

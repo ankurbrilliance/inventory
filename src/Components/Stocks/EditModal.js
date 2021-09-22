@@ -44,21 +44,28 @@ const EditModal = ({ lgEditShow, setLgEditShow, id }) => {
     guardfilm: item?.guardfilm,
   };
 
-  useEffect(async () => {
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
-    Axios.get(`http://65.0.129.68/api/v1/Stock_M/getby/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    }).then((response) => {
-      const values = response?.data.res;
-      setItem(() => {
-        setItem(values);
-      });
-    });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuZXdVc2VyIjp7Il9pZCI6IjYwM2IzNDM5MzViODI2MjBhMDg5ZTkwNyIsInVzZXJuYW1lIjoiYWRtaW4iLCJwYXNzd29yZCI6ImFkbWluIn0sImlhdCI6MTYxNTg5MTU2MSwiZXhwIjoxNjE1OTc3OTYxfQ.exU8x5APvJBqlVKtIHHSYrqXMNKu38GyusySo-ZxCp4";
+        Axios.get(`http://65.0.129.68/api/v1/Stock_M/getby/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }).then((response) => {
+          const values = response?.data.res;
+          setItem(() => {
+            setItem(values);
+          });
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+    fetchData();
   }, [id]);
 
   const handleSubmit = async (e) => {
